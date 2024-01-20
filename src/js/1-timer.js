@@ -55,15 +55,13 @@ buttonStart.addEventListener('click', () => {
     const timeDifference = userSelectedDate.getTime() - Date.now();
     if (timeDifference <= 0) {
       inputDate.disabled = false;
+      clearInterval(countdown);
+      displayTime(0, 0, 0, 0);
+      return;
     } else {
       inputDate.disabled = true;
     }
 
-    if (timeDifference <= 0) {
-      clearInterval(countdown);
-      displayTime(0, 0, 0, 0);
-      return;
-    }
     const timeParts = convertMs(timeDifference);
     displayTime(
       timeParts.days,
