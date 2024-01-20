@@ -3,6 +3,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
+const inputDate = document.querySelector('#datetime-picker');
 const buttonStart = document.querySelector('button[data-start]');
 const daysTimer = document.querySelector('[data-days]');
 const hoursTimer = document.querySelector('[data-hours]');
@@ -10,7 +11,7 @@ const minutesTimer = document.querySelector('[data-minutes]');
 const secondsTimer = document.querySelector('[data-seconds]');
 
 let userSelectedDate;
-const currentDate = new Date();
+let countdown;
 buttonStart.disabled = true;
 
 const options = {
@@ -19,15 +20,19 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose: function (selectedDates) {
+    const currentDate = new Date();
     userSelectedDate = selectedDates[0];
 
-    if (userSelectedDate.getTime() <= currentDate.getTime()) {
+    if (userSelectedDate <= currentDate) {
       iziToast.error({
         title: 'Error',
         message: 'Please choose a date in the future',
-        position: 'topCenter',
+        position: 'topRight',
       });
       buttonStart.disabled = true;
+      clearInterval(countdown);
+      displayTime(0, 0, 0, 0);
+      return;
     } else {
       buttonStart.disabled = false;
     }
@@ -35,12 +40,28 @@ const options = {
 };
 
 buttonStart.addEventListener('click', () => {
+  if (!userSelectedDate || userSelectedDate <= new Date()) {
+    iziToast.error({
+      title: 'Error',
+      message: 'Please choose a date in the future',
+      position: 'topRight',
+    });
+    return;
+  }
+
   buttonStart.disabled = true;
+
   const countdown = setInterval(e => {
     const timeDifference = userSelectedDate.getTime() - Date.now();
     if (timeDifference <= 0) {
+      inputDate.disabled = false;
+    } else {
+      inputDate.disabled = true;
+    }
+
+    if (timeDifference <= 0) {
       clearInterval(countdown);
-      displayTime(0);
+      displayTime(0, 0, 0, 0);
       return;
     }
     const timeParts = convertMs(timeDifference);

@@ -5,19 +5,17 @@ const form = document.querySelector('.form');
 
 form.addEventListener('submit', e => {
   e.preventDefault();
-  const delay = e.currentTarget.delay.value;
-  const state = e.currentTarget.state.value;
+  const delay = form.elements.delay.value;
+  const state = form.elements.state.value;
 
   const promise = new Promise((resolve, reject) => {
-    if (state === 'fulfilled') {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (state === 'fulfilled') {
         resolve(delay);
-      }, delay);
-    } else if (state === 'rejected') {
-      setTimeout(() => {
+      } else if (state === 'rejected') {
         reject(delay);
-      }, delay);
-    }
+      }
+    }, delay);
   });
 
   promise
@@ -25,14 +23,14 @@ form.addEventListener('submit', e => {
       iziToast.success({
         title: 'Ok',
         message: `✅ Fulfilled promise in ${delay}ms`,
-        position: 'topCenter',
+        position: 'topRight',
       });
     })
     .catch(delay => {
       iziToast.error({
         title: 'Error',
         message: `❌ Rejected promise in ${delay}ms`,
-        position: 'topCenter',
+        position: 'topRight',
       });
     });
 });
