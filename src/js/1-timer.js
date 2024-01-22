@@ -54,12 +54,10 @@ buttonStart.addEventListener('click', () => {
   const countdown = setInterval(e => {
     const timeDifference = userSelectedDate.getTime() - Date.now();
     if (timeDifference <= 0) {
-      inputDate.disabled = false;
+      buttonStart.disabled = false;
       clearInterval(countdown);
       displayTime(0, 0, 0, 0);
       return;
-    } else {
-      inputDate.disabled = true;
     }
 
     const timeParts = convertMs(timeDifference);
